@@ -122,6 +122,11 @@ def call(Map pipelineParams) {
                     ec2_prepare_test_ami()
                 }
             }
+            stage("Build os-tests project"){
+                steps{
+                    build_os_tests_project()
+                }
+            }
             stage ("Run Test") {
                 steps {
                     ec2_os_tests_run()
