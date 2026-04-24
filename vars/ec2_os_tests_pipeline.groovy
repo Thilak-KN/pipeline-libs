@@ -129,6 +129,11 @@ def call(Map pipelineParams) {
                     }
                 }
             }
+            stage("Build os-tests project"){
+                steps{
+                    build_os_tests_project()
+                }
+            }
             stage ("Run Test") {
                 steps {
                     // This binds the Jenkins secret to env variables
