@@ -7,7 +7,7 @@ def call() {
     pip3 install --upgrade setuptools
     pip3 install build installer
     python -m build
-    pip3 uninstall os-tests
+    pip3 uninstall -y os-tests
     python -m installer dist/*.whl
     '''
 }
