@@ -43,7 +43,7 @@ def call(Map pipelineParams) {
         }
         options {
             buildDiscarder(logRotator(numToKeepStr: '25'))
-            timeout(time: 24, unit: 'HOURS') 
+            timeout(time: 24, unit: 'HOURS')
         }
         environment {
             PYTHONPATH="${env.WORKSPACE}"
@@ -55,7 +55,7 @@ def call(Map pipelineParams) {
             DST_GROUP="${DST_STORAGE}"
             DEFAULT_EC2_PROFILES="${pipelineParams.DEFAULT_EC2_PROFILES}"
             DEFAULT_EC2_SUBNET="${pipelineParams.DEFAULT_EC2_SUBNET}"
-            DEFAULT_EC2_SUBNET_IPV6ONLY="${pipelineParams.DEFAULT_EC2_SUBNET_IPV6ONLY}"            
+            DEFAULT_EC2_SUBNET_IPV6ONLY="${pipelineParams.DEFAULT_EC2_SUBNET_IPV6ONLY}"
             DEFAULT_EC2_SG_GROUP="${pipelineParams.DEFAULT_EC2_SG_GROUP}"
             DEFAULT_PROXY_URL="${pipelineParams.DEFAULT_PROXY_URL}"
             DEFAULT_JSLAVE="${pipelineParams.DEFAULT_JSLAVE}"
@@ -94,7 +94,7 @@ def call(Map pipelineParams) {
                         env.COMPOSEID_URL = "https://mirror.stream.centos.org/9-stream/COMPOSE_ID"
                     }
             }
-                
+
             }
             stage('Parse COMPOSEID URL') {
                 steps {
@@ -117,9 +117,14 @@ def call(Map pipelineParams) {
             }
             stage("Prepare image") {
                 steps {
+                    // This binds the Jenkins secret to env variables
+                    withCredentials([usernamePassword(credentialsId: 'aws-test-automation-keys',
+                                    passwordVariable: 'AWS_SECRET_ACCESS_KEY',
+                                    usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     //checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'origin/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'avocado-cloud']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://code.engineering.redhat.com/gerrit/avocado-cloud']]]
                     //checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'origin/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'xen-ci']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://code.engineering.redhat.com/gerrit/xen-ci']]]
                     ec2_prepare_test_ami()
+                    }
                 }
             }
             stage ("Run Test") {
