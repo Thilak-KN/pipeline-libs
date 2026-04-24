@@ -136,7 +136,7 @@ def call(Map pipelineParams) {
                                 usernamePassword(credentialsId: 'aws-test-automation-keys', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID'),
                                 sshUserPrivateKey(credentialsId: 'aws-virt-cloud-ssh-key', keyFileVariable: 'KEYFILE')
                                 ]) {
-                    sh 'chmod 400 $SSH_KEY_PATH'
+                    sh 'chmod 400 $KEYFILE'
                     ec2_os_tests_run()
                     }
                 }
